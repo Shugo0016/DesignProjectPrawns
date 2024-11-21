@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');  // For handling file paths
-const pool = require('./db');  // Import the Pool instance from db.js
+const pool = require('../../db');  // Import the Pool instance from db.js
 
 const app = express();
 app.use(cors());
