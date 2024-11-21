@@ -99,3 +99,49 @@ footer {
   padding: 1rem;
   margin-top: 2rem;
 }
+
+/* Registration Page Styles */
+.register-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.register-container h1 {
+  text-align: center;
+  color: #457b9d;
+}
+
+.register-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.register-container label {
+  font-weight: bold;
+  color: #333;
+}
+
+.register-container input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.register-container button {
+  background-color: #457b9d;
+  color: white;
+  border: none;
+  padding: 0.7rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.register-container button:hover {
+  background-color: #1d3557;
+}

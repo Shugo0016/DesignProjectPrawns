@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Programming Prawns</title>
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+  <body>
+    <main class="register-container">
+      <h1>Register</h1>
+      <form id="registrationForm">
+        <label for="student_name">First Name:</label>
+        <input type="text" id="student_name" name="student_name" required />
+
+        <label for="student_email">Email:</label>
+        <input type="email" id="student_email" name="student_email" required />
+
+        <label for="student_password">Password:</label>
+        <input type="password" id="student_password" name="student_password" required />
+
+        <label for="student_dob">Date of Birth:</label>
+        <input type="date" id="student_dob" name="student_dob" required />
+
+        <label for="student_grade">Grade:</label>
+        <input type="text" id="student_grade" name="student_grade" required />
+
+        <label for="student_guardian">Guardian Name:</label>
+        <input type="text" id="student_guardian" name="student_guardian" required />
+
+        <button type="submit">Register</button>
+      </form>
+      <p id="message"></p>
+    </main>
+
+    <script>
+      // Handle form submission
+      document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = {
+          student_name: document.getElementById('student_name').value,
+          student_email: document.getElementById('student_email').value,
+          student_password: document.getElementById('student_password').value,
+          student_dob: document.getElementById('student_dob').value,
+          student_grade: document.getElementById('student_grade').value,
+          student_guardian: document.getElementById('student_guardian').value,
+        };
+
+        try {
+          const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            document.getElementById('message').innerText = 'Registration successful!';
+            document.getElementById('registrationForm').reset();
+          } else {
+            document.getElementById('message').innerText = result.error || 'Registration failed!';
+          }
+        } catch (err) {
+          console.error('Error submitting form:', err);
+          document.getElementById('message').innerText = 'Server error!';
+        }
+      });
+    </script>
+  </body>
+</html>
