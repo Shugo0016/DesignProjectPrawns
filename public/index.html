@@ -5,31 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Programming Prawns</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
   </head>
   <body>
-    <main>
-        <h1>Programming Prawns</h1> 
-        <p> Welcome to our free coding education platform. Play fun unique games to get a grasp on the fundamentals of Python!</p> 
-        <img src="images/programmingPrawn.jpeg" alt="prawn" width="512" height="512"> 
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="container">
+        <h1 class="logo">Programming Prawns</h1>
+        <ul class="nav-links">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="#">Games</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Login</a></li>
+          <li><a href="registrar.html" class="new-user">New User? →</a></li>
+        </ul>
+      </div>
+    </nav>
 
-        <section id="games">
-          <h2>Game</h2>
-          <p>Here is the game:</p>
-          <iframe src="https://i.simmer.io/@gracea/path" style="width:960px;height:600px"></iframe>
-        </section>
-        <!-- New Section for Student Progress -->
-        <section id="student-progress">
-          <h2>Student Progress</h2>
-          <p>Here is the progress of our students:</p>
-          <ul id="student-list"></ul> <!-- This will display the student data -->
-        </section>
-    </main>
+    <!-- Hero Section -->
+    <header class="hero">
+      <div class="hero-content container">
+        <h2>Coding can be fun!</h2>
+        <p>
+          Programming Prawns - where students can learn foundational programming
+          skills and concepts while playing games!
+        </p>
+        <img
+          src="images/programmingPrawn.jpeg"
+          alt="prawn"
+          class="prawn-image"
+        />
+      </div>
+    </header>
 
-    <!-- JavaScript to fetch and display data from the server -->
     <script src="index.js"></script>
-    <script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+<!-- <script>
         // Fetch student progress data from the API and display it
         fetch('http://localhost:5001/api/students')
             .then(response => response.json())
@@ -42,6 +63,4 @@
                 });
             })
             .catch(error => console.error('Error fetching student data:', error));
-    </script>
-  </body>
-</html>
+    </script> -->
