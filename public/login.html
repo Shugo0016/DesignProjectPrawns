@@ -14,10 +14,10 @@
       <div class="container">
         <h1 class="logo">Programming Prawns</h1>
         <ul class="nav-links">
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="#">Games</a></li>
-          <li><a href="#">Contact</a></li>
-          <li><a href="login.html">Login</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="games.html">Games</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="about.html" class="active">About Us</a></li>
           <li><a href="registrar.html" class="new-user">New User? →</a></li>
         </ul>
       </div>
@@ -44,23 +44,3 @@
 </html>
 
 
-
-
-
-
-
-
-<!-- <script>
-        // Fetch student progress data from the API and display it
-        fetch('http://localhost:5001/api/students')
-            .then(response => response.json())
-            .then(data => {
-                const studentList = document.getElementById('student-list');
-                data.forEach(student => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = `Name: ${student.student_name}, Email: ${student.student_email}, Grade: ${student.student_grade}`;
-                    studentList.appendChild(listItem);
-                });
-            })
-            .catch(error => console.error('Error fetching student data:', error));
-    </script> -->
