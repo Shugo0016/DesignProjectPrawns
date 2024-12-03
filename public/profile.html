@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>User Profile - Programming Prawns</title>
+		<link rel="stylesheet" href="css/styles.css">
+	</head>
+	<body>
+		<!-- Navigation Bar -->
+		<nav class="navbar">
+			<div class="container">
+				<h1 class="logo">Programming Prawns</h1>
+				<ul class="nav-links">
+					<li><a href="games.html">Games</a></li>
+		
+					<li id="user-info">Loading...</li>
+					<li><a href="#" id="logout">Logout</a></li>
+				</ul>
+			</div>
+		</nav>
+
+		<main>
+			<h1>Welcome to Your Profile</h1>
+			<p id="profile-message"></p>
+
+			<h2>Your Details</h2>
+			<ul>
+				<li><strong>Name:</strong> <span id="student-name"></span></li>
+				<li><strong>Email:</strong> <span id="student-email"></span></li>
+				<li><strong>Date of Birth:</strong> <span id="student-dob"></span></li>
+				<li><strong>Grade:</strong> <span id="student-grade"></span></li>
+				<li><strong>Guardian:</strong> <span id="student-guardian"></span></li>
+			</ul>
+		</main>
+
+		<script>
+			// Get the student ID from session storage
+			const studentId = sessionStorage.getItem('student_id');
+
+			if (!studentId) {
+				// Redirect to login page if not logged in
+				window.location.href = 'login.html';
+			} else {
+				// Function to fetch and display the student's profile data
+				async function fetchProfile() {
+					try {
+						// Fetch student data from the API
+						const response = await fetch(`/api/profile?student_id=${studentId}`);
+						const data = await response.json();
+
+						if (response.ok) {
+							// Display the student's name in the navbar
+							document.getElementById('user-info').innerText = `Hello, ${data.student_name}`;
+
+							// Display student details
+							document.getElementById('student-name').innerText = data.student_name;
+							document.getElementById('student-email').innerText = data.student_email;
+
+							// Format the date of birth to "Month Day, Year"
+							const dob = new Date(data.student_dob);
+							const formattedDob = dob.toLocaleDateString('en-US', {
+								month: 'long',
+								day: 'numeric',
+								year: 'numeric',
+							});
+							document.getElementById('student-dob').innerText = formattedDob;
+
+							document.getElementById('student-grade').innerText = data.student_grade;
+							document.getElementById('student-guardian').innerText = data.student_guardian;
+						} else {
+							// Show error if fetching data fails
+							document.getElementById('profile-message').innerText =
+								data.error || 'Failed to load profile data.';
+						}
+					} catch (err) {
+						// Show error for server issues
+						console.error('Error fetching profile data:', err);
+						document.getElementById('profile-message').innerText = 'Server error!';
+					}
+				}
+
+				// Fetch the student's profile data
+				fetchProfile();
+			}
+
+			// Logout function to clear session and redirect to login
+			document.getElementById('logout').addEventListener('click', () => {
+				sessionStorage.clear();
+				window.location.href = 'login.html';
+			});
+		</script>
+	</body>
+</html>

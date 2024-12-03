@@ -145,3 +145,8 @@ footer {
 .register-container button:hover {
   background-color: #1d3557;
 }
+
+#user-info {
+	color: white; 
+	font-weight: bold; 
+}
