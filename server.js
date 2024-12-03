@@ -7,13 +7,13 @@ const state = require('./state');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
-const port = 3030;
+const port = 8888;
 
 // PostgreSQL connection pool
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
-    database: 'demo',
+    database: 'postgres',
     password: 'marbby84',
     port: 5433,
 });
@@ -33,20 +33,17 @@ app.get('/', (req, res) => {
     res.send('Server is running');
 });
 
-// Receive data from Gamemaker
-/* - In GameMaker obj_data_manager Create -
-   --> http_request(http://localhost:3030/data, "POST", ds_map(Content-Type "application/json"), ds_map(my_id,myscore))
-    --> May change my_id to come from database instead of game
-*/
+// Receive data from Gamemaker - session_id, game_id,level,score,time,completed
+// get student id from state
 app.post('/data', async (req, res) => {
     const { data_field } = req.body;
    // console.log(req.body); // Log the entire body
-    const { my_id, my_score } = req.body;
-    console.log(`id: ${my_id}, score: ${my_score}`); // Check if values are received
-    console.log(my_id,my_score)
-    res.send([my_id,my_score]);
+    const { session_id,game_id,level_id,score,time_spent,completed} = req.body;
+    const student_id = state.get_student_id();
+    console.log(`id: ${student_id}, session: ${session_id}`); // Check if values are received
+    //res.send([session_id,student_id,game_id,level_id,score,time_spent,completed]);
     try {
-        const result = await pool.query('INSERT INTO gm2tests (my_id, my_score) VALUES ($1, $2)', [my_id, my_score]);
+        const result = await pool.query('INSERT INTO gamesessions (session_id,student_id,game_id,level_id,score,time_spent,completed) VALUES ($1, $2,$3,$4,$5,$6,$7)', [session_id,student_id,game_id,level_id,score,time_spent,completed]);
      
         res.status(201).json(result.rows[0]);
     } catch (err) {
@@ -58,7 +55,7 @@ app.post('/data', async (req, res) => {
 app.get('/data', async (req, res) => {
     try {
         //display
-        const result = await pool.query('SELECT * FROM gm2tests');
+        const result = await pool.query('SELECT * FROM gamesessions');
         res.json(result.rows);
     } catch (err) {
         console.error('Error executing query', err);
