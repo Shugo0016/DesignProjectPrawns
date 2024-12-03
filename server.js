@@ -67,7 +67,7 @@ app.post('/unitydata', async (req, res) => {
     const { data_field } = req.body;
    // console.log(req.body); // Log the entire body
     const student_id = state.get_student_id();
-    const { to_update, value } = req.body;
+    const { to_update, value, session_id, game_id } = req.body;
 
     console.log(`update: ${to_update}, value: ${value}, student id: ${student_id}`); // Check if values are received
     console.log(to_update,value, student_id)
@@ -82,13 +82,19 @@ app.post('/unitydata', async (req, res) => {
                 secs.toString().padStart(2, '0'), ].join(':');
     }
     try {
-        const query = `UPDATE public.gamesessions SET ${to_update} = $1 WHERE student_id = $2`;
+        const query = `UPDATE public.gamesessions SET ${to_update} = $1 WHERE session_id = $2`;
         if(to_update == 'time_spent'){
-            const result = await pool_unity.query(query, [new_value, student_id]);
+            const result = await pool_unity.query(query, [new_value, session_id]);
+            res.status(201).json(result.rows[0]);
+        }
+        else if(to_update == 'level_id'){
+            const query = `INSERT INTO gamesessions (session_id, student_id, game_id, level_id, score, time_spent, completed) 
+                VALUES ($1, $2, $3, $4, null, null, false)`;
+            const result = await pool_unity.query(query, [session_id, student_id, game_id, value]);
             res.status(201).json(result.rows[0]);
         }
         else{
-            const result = await pool_unity.query(query, [value, student_id]);
+            const result = await pool_unity.query(query, [value, session_id]);
             res.status(201).json(result.rows[0]);
 
         }
