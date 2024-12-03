@@ -3,6 +3,7 @@
 
 const express = require('express');
 const { Pool } = require('pg');
+const state = require('./state');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
@@ -68,7 +69,9 @@ app.get('/data', async (req, res) => {
 app.post('/unitydata', async (req, res) => {
     const { data_field } = req.body;
    // console.log(req.body); // Log the entire body
-    const { to_update, value, student_id } = req.body;
+    const student_id = state.get_student_id();
+    const { to_update, value } = req.body;
+
     console.log(`update: ${to_update}, value: ${value}, student id: ${student_id}`); // Check if values are received
     console.log(to_update,value, student_id)
     res.send([to_update,value, student_id]);
