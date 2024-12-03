@@ -45,8 +45,10 @@ const generateStudentId = async () => {
 // API Route: User registration
 app.post('/api/register', async (req, res) => {
   const { student_name, student_email, student_password, student_dob, student_grade, student_guardian } = req.body;
+  
 
   try {
+
     // Generate a unique student ID
     const student_id = await generateStudentId();
 
@@ -59,8 +61,8 @@ app.post('/api/register', async (req, res) => {
        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
       [student_id, student_name, student_email, hashedPassword, student_dob, student_grade, student_guardian]
     );
-
-    state.set_student_is(student_id);
+    
+    state.set_student_id(student_id);
 
     res.status(201).json({ message: 'User registered successfully', user: result.rows[0] });
   } catch (err) {
