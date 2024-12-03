@@ -68,14 +68,30 @@ app.get('/data', async (req, res) => {
 app.post('/unitydata', async (req, res) => {
     const { data_field } = req.body;
    // console.log(req.body); // Log the entire body
-    const { to_update,value, session_id } = req.body;
-    console.log(`update: ${to_update}, value: ${value}, session: ${session_id}`); // Check if values are received
-    console.log(to_update,value, session_id)
-    res.send([to_update,value, session_id]);
+    const { to_update, value, student_id } = req.body;
+    console.log(`update: ${to_update}, value: ${value}, student id: ${student_id}`); // Check if values are received
+    console.log(to_update,value, student_id)
+    res.send([to_update,value, student_id]);
+    if(to_update == 'time_spent'){
+        hrs = Math.floor(value / 3600);
+        mins = Math.floor((value % 3600) / 60);
+        secs = value % 60;
+        
+        new_value = [hrs.toString().padStart(2, '0'),
+                mins.toString().padStart(2, '0'),
+                secs.toString().padStart(2, '0'), ].join(':');
+    }
     try {
-        const query = `UPDATE public.gamesessions SET ${to_update} = $1 WHERE session_id = $2`;
-        const result = await pool_unity.query(query, [value, session_id]);
-        res.status(201).json(result.rows[0]);
+        const query = `UPDATE public.gamesessions SET ${to_update} = $1 WHERE student_id = $2`;
+        if(to_update == 'time_spent'){
+            const result = await pool_unity.query(query, [new_value, student_id]);
+            res.status(201).json(result.rows[0]);
+        }
+        else{
+            const result = await pool_unity.query(query, [value, student_id]);
+            res.status(201).json(result.rows[0]);
+
+        }
     } catch (err) {
         console.error(err);
         res.status(500).send('Error saving data');
