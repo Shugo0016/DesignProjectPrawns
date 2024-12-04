@@ -27,11 +27,13 @@
 
 			<h2>Your Details</h2>
 			<ul>
+                <li><strong>ID:</strong> <span id="student-id"></span></li>
 				<li><strong>Name:</strong> <span id="student-name"></span></li>
 				<li><strong>Email:</strong> <span id="student-email"></span></li>
 				<li><strong>Date of Birth:</strong> <span id="student-dob"></span></li>
 				<li><strong>Grade:</strong> <span id="student-grade"></span></li>
 				<li><strong>Guardian:</strong> <span id="student-guardian"></span></li>
+
 			</ul>
 		</main>
 
@@ -52,6 +54,7 @@ if (!studentId) {
 
             if (response.ok) {
                 document.getElementById('user-info').innerText = `Hello, ${data.student_name}`;
+                document.getElementById('student-id').innerText = data.student_id;
                 document.getElementById('student-name').innerText = data.student_name;
                 document.getElementById('student-email').innerText = data.student_email;
 

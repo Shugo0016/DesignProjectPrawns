@@ -87,6 +87,10 @@ app.post('/api/login', async (req, res) => {
       }
 
       const user = result.rows[0];
+      // console.log(user.student_id);
+     
+      state.set_student_id(user.student_id);
+      // console.log(state.get_student_id());
 
       // Compare the entered password with the stored hashed password
       const isMatch = await bcrypt.compare(student_password, user.student_password);
@@ -114,7 +118,7 @@ app.get('/api/profile', async (req, res) => {
 	try {
 		// Query the student table to get the student's details
 		const studentResult = await pool.query(
-			`SELECT student_name, student_email, student_dob, student_grade, student_guardian 
+			`SELECT student_id, student_name, student_email, student_dob, student_grade, student_guardian 
 			FROM student 
 			WHERE student_id = $1`,
 			[student_id]

@@ -1,30 +1,49 @@
 //Connect PostgreSQL with Gamemaker 
 //TODO: edit to fit with current postgresql tables/data format
 
+// const express = require('express');
+// const { Pool } = require('pg');
+// const pool = require('./db');
+// const state = require('./state');
+
+// const cors = require('cors');
+// const app = express();
+// const port = 8888;
 const express = require('express');
-const { Pool } = require('pg');
-const state = require('./state');
-const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
+const bodyParser = require('body-parser');
+const pool = require('./db');
+const state = require('./state');
+const port = 8886;
+
 const app = express();
-const port = 8888;
 
 // PostgreSQL connection pool
-const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'postgres',
-    password: 'marbby84',
-    port: 5433,
-});
+// const pool = new Pool({
+//     user: 'postgres',
+//     host: 'localhost',
+//     database: 'postgres',
+//     password: 'marbby84',
+//     port: 5433,
+// });
 
-const pool_unity = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'prawndata',
-    password: 'postgres',
-    port: 5432,
-});
+// const pool_unity = new Pool({
+//     user: 'postgres',
+//     host: 'localhost',
+//     database: 'prawndata',
+//     password: 'postgres',
+//     port: 5432,
+// });
+
+// const pool = new Pool({
+//     user: 'postgres',            // Your PostgreSQL username
+//     host: 'localhost',           // Database host
+//     database: 'postgres',        // Your database name
+//     password: 'atlasUerol12@',   // Your PostgreSQL password
+//     port: 8888,                  // PostgreSQL port (8888 in your case)
+//   });
+  
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -37,9 +56,18 @@ app.get('/', (req, res) => {
 // get student id from state
 app.post('/data', async (req, res) => {
     const { data_field } = req.body;
+    // state.set_student_id(318640);
    // console.log(req.body); // Log the entire body
     const { session_id,game_id,level_id,score,time_spent,completed} = req.body;
     const student_id = state.get_student_id();
+
+
+
+  
+
+
+    console.log("Ur mum");
+    console.log(state.get_student_id());
     console.log(`id: ${student_id}, session: ${session_id}`); // Check if values are received
     //res.send([session_id,student_id,game_id,level_id,score,time_spent,completed]);
     try {

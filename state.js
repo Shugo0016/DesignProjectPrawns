@@ -1,4 +1,5 @@
-let student_id = null;
+let student_id = null; // Declare as a variable, not const
+
 
 function get_student_id() {
   return student_id;
