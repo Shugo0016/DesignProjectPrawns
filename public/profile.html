@@ -95,9 +95,29 @@
                 console.error('Error fetching progress:', err);
             }
         }
+        async function fetchStudentSession() {
+            try {
+                const studentId = localStorage.getItem('student_id');
+                const response = await fetch(`/api/student-sessions?student_id=${studentId}`);
+                const data = await response.json();
 
+                if (response.ok) {
+                    const progressList = document.getElementById('game-sessions-list');
+                    data.progress.forEach(game => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `<strong>${game.game_name}:</strong> ${game.score}`;
+                        progressList.appendChild(listItem);
+                    });
+                } else {
+                    console.error(data.error);
+                }
+            } catch (err) {
+                console.error('Error fetching progress:', err);
+            }
+        }
         // Fetch both profile and progress data
-        fetchProfile().then(() => fetchStudentProgress());
+        fetchProfile().then(() => fetchStudentProgress()).then(() =>fetchStudentSession());
+
 
         // Logout functionality
         document.getElementById('logout').addEventListener('click', () => {

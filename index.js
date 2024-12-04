@@ -188,7 +188,41 @@ app.get('/api/student-progress', async (req, res) => {
     res.status(500).json({ error: 'Server error.' });
   }
 });
+// API Route: Fetch student's game progress
+app.get('/api/student-sessions', async (req, res) => {
+  const { student_id } = req.query;
 
+  if (!student_id) {
+    return res.status(400).json({ error: 'Student ID is required.' });
+  }
+
+  try {
+    // Query to get highest score for each game
+    const result = await pool.query(
+      `
+      SELECT gam.game_id, gam.game_name, gams.student_ID, gams.score
+             FROM games gam
+             LEFT JOIN gamesessions gams 
+             ON gam.game_id = gams.game_id WHERE gams.student_id = 654767
+      
+      `,
+      [student_id]
+    );
+
+    // Format the progress data
+    const progress = result.rows.map(row => ({
+      game_id: row.game_id,
+      game_name: row.game_name,
+      score: row.score,
+
+    }));
+
+    res.json({ progress });
+  } catch (err) {
+    console.error('Error fetching student progress:', err.message);
+    res.status(500).json({ error: 'Server error.' });
+  }
+});
 // Start the server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
