@@ -144,6 +144,13 @@ app.get('/unitydata', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
+app.post('/getId', (req, res) => {
+    const { student_id } = req.body; 
+    state.set_student_id(student_id);
+    res.json({ message: 'Student ID set successfully' });
+});
+  
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });

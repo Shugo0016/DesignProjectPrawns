@@ -89,7 +89,7 @@ app.post('/api/login', async (req, res) => {
      
       state.set_student_id(user.student_id);
       // console.log(state.get_student_id());
-
+      getId();
       // Compare the entered password with the stored hashed password
       const isMatch = await bcrypt.compare(student_password, user.student_password);
 
@@ -105,9 +105,25 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+async function getId() {
+  const s_id = state.get_student_id();
+  console.log("id is " + s_id);
 
+  try {
+    const response = await fetch('http://localhost:8886/getId', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ student_id: s_id }),
+    });
 
-
+    const data = await response.json();
+    console.log('User Info:', data);
+  } catch (err) {
+    console.error('Error fetching user info:', err.message);
+  }
+}
 
 
 app.get('/api/profile', async (req, res) => {
