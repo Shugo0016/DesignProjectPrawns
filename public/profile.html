@@ -1,89 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<title>User Profile - Programming Prawns</title>
-		<link rel="stylesheet" href="css/styles.css">
-	</head>
-	<body>
-		<!-- Navigation Bar -->
-		<nav class="navbar">
-			<div class="container">
-				<h1 class="logo">Programming Prawns</h1>
-				<ul class="nav-links">
-					<li><a href="games.html">Games</a></li>
-		
-					<li id="user-info">Loading...</li>
-					<li><a href="#" id="logout">Logout</a></li>
-				</ul>
-			</div>
-		</nav>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>User Profile - Programming Prawns</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">Programming Prawns</h1>
+            <ul class="nav-links">
+                <li><a href="games.html">Games</a></li>
+                <li id="user-info">Loading...</li>
+                <li><a href="#" id="logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
 
-		<main>
-			<h1>Welcome to Your Profile</h1>
-			<p id="profile-message"></p>
+    <main>
+        <h1>Welcome to Your Profile</h1>
+        <p id="profile-message"></p>
 
-			<h2>Your Details</h2>
-			<ul>
-                <li><strong>ID:</strong> <span id="student-id"></span></li>
-				<li><strong>Name:</strong> <span id="student-name"></span></li>
-				<li><strong>Email:</strong> <span id="student-email"></span></li>
-				<li><strong>Date of Birth:</strong> <span id="student-dob"></span></li>
-				<li><strong>Grade:</strong> <span id="student-grade"></span></li>
-				<li><strong>Guardian:</strong> <span id="student-guardian"></span></li>
+        <h2>Your Details</h2>
+        <ul>
+            <li><strong>ID:</strong> <span id="student-id"></span></li>
+            <li><strong>Name:</strong> <span id="student-name"></span></li>
+            <li><strong>Email:</strong> <span id="student-email"></span></li>
+            <li><strong>Date of Birth:</strong> <span id="student-dob"></span></li>
+            <li><strong>Grade:</strong> <span id="student-grade"></span></li>
+            <li><strong>Guardian:</strong> <span id="student-guardian"></span></li>
+        </ul>
 
-			</ul>
-		</main>
+        <section id="progress-section">
+            <h2>Your Game Progress</h2>
+            <ul id="game-progress-list"></ul>
+        </section>
+    </main>
 
-		<script>
-			// Get the student ID from session storage
-			// Get the student ID from localStorage
-const studentId = localStorage.getItem('student_id');
+    <script>
+        // Fetch and display profile data
+        async function fetchProfile() {
+            try {
+                const studentId = localStorage.getItem('student_id');
+                if (!studentId) {
+                    window.location.href = 'login.html';
+                    return;
+                }
 
-if (!studentId) {
-    // Redirect to login page if not logged in
-    window.location.href = 'login.html';
-} else {
-    // Fetch and display the student's profile data
-    async function fetchProfile() {
-        try {
-            const response = await fetch(`/api/profile?student_id=${studentId}`);
-            const data = await response.json();
+                const response = await fetch(`/api/profile?student_id=${studentId}`);
+                const data = await response.json();
 
-            if (response.ok) {
-                document.getElementById('user-info').innerText = `Hello, ${data.student_name}`;
-                document.getElementById('student-id').innerText = data.student_id;
-                document.getElementById('student-name').innerText = data.student_name;
-                document.getElementById('student-email').innerText = data.student_email;
+                if (response.ok) {
+                    document.getElementById('user-info').innerText = `Hello, ${data.student_name}`;
+                    document.getElementById('student-id').innerText = data.student_id;
+                    document.getElementById('student-name').innerText = data.student_name;
+                    document.getElementById('student-email').innerText = data.student_email;
 
-                const dob = new Date(data.student_dob);
-                const formattedDob = dob.toLocaleDateString('en-US', {
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric',
-                });
-                document.getElementById('student-dob').innerText = formattedDob;
-
-                document.getElementById('student-grade').innerText = data.student_grade;
-                document.getElementById('student-guardian').innerText = data.student_guardian;
-            } else {
-                document.getElementById('profile-message').innerText =
-                    data.error || 'Failed to load profile data.';
+                    const dob = new Date(data.student_dob).toLocaleDateString('en-US');
+                    document.getElementById('student-dob').innerText = dob;
+                    document.getElementById('student-grade').innerText = data.student_grade;
+                    document.getElementById('student-guardian').innerText = data.student_guardian;
+                } else {
+                    document.getElementById('profile-message').innerText = data.error || 'Failed to load profile.';
+                }
+            } catch (err) {
+                console.error('Error fetching profile:', err);
             }
-        } catch (err) {
-            console.error('Error fetching profile data:', err);
-            document.getElementById('profile-message').innerText = 'Server error!';
         }
-    }
 
-    fetchProfile();
-}
-document.getElementById('logout').addEventListener('click', () => {
-    localStorage.clear(); // Clear all stored data
-    window.location.href = 'login.html'; // Redirect to the login page
-});
-		</script>
-	</body>
+        // Fetch and display student progress
+        async function fetchStudentProgress() {
+            try {
+                const studentId = localStorage.getItem('student_id');
+                const response = await fetch(`/api/student-progress?student_id=${studentId}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    const progressList = document.getElementById('game-progress-list');
+                    data.progress.forEach(game => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `<strong>${game.game_name}:</strong> ${game.status}`;
+                        progressList.appendChild(listItem);
+                    });
+                } else {
+                    console.error(data.error);
+                }
+            } catch (err) {
+                console.error('Error fetching progress:', err);
+            }
+        }
+
+        // Fetch both profile and progress data
+        fetchProfile().then(() => fetchStudentProgress());
+
+        // Logout functionality
+        document.getElementById('logout').addEventListener('click', () => {
+            localStorage.clear(); // Clear all stored data
+            window.location.href = 'login.html'; // Redirect to the login page
+        });
+    </script>
+</body>
 </html>
