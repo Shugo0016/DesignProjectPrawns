@@ -189,6 +189,35 @@ app.get('/api/student-progress', async (req, res) => {
   }
 });
 
+
+app.get('/api/student-sessions', async (req, res) => {
+  const { student_id } = req.query;
+
+  if (!student_id) {
+      return res.status(400).json({ error: 'Student ID is required.' });
+  }
+
+  try {
+      // Query to get all game sessions for the student
+      const result = await pool.query(
+          `SELECT gs.session_id, g.game_name, gs.level_id AS level, gs.score, gs.time_spent, gs.completed
+           FROM gamesessions gs
+           JOIN games g ON gs.game_id = g.game_id
+           WHERE gs.student_id = $1
+           ORDER BY gs.session_id DESC`,
+          [student_id]
+      );
+
+      res.json({ sessions: result.rows });
+  } catch (err) {
+      console.error('Error fetching student sessions:', err.message);
+      res.status(500).json({ error: 'Server error.' });
+  }
+});
+
+
+
+
 // Start the server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
