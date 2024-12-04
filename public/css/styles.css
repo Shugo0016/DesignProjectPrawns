@@ -43,6 +43,11 @@ body {
   text-decoration: underline;
 }
 
+#user-info {
+  color: white;
+  font-weight: bold;
+}
+
 /* About Us Section */
 .about-us {
   text-align: center;
@@ -146,7 +151,44 @@ footer {
   background-color: #1d3557;
 }
 
-#user-info {
-	color: white; 
-	font-weight: bold; 
+/* Profile Page Styles */
+.main-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  color: #1e90ff;
+}
+
+.progress-section ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.progress-section ul li {
+  background-color: #e6f2ff;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #cce7ff;
+}
+
+.btn-logout {
+  background-color: #ff6347;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-logout:hover {
+  background-color: #e05347;
 }
