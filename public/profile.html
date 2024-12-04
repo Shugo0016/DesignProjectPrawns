@@ -87,9 +87,10 @@
 
 			// Logout function to clear session and redirect to login
 			document.getElementById('logout').addEventListener('click', () => {
-				sessionStorage.clear();
-				window.location.href = 'login.html';
-			});
+	            localStorage.clear(); // Clear all stored user data
+	            window.location.href = 'login.html'; // Redirect to the login page
+            });
+
 		</script>
 	</body>
 </html>

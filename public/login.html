@@ -59,11 +59,15 @@
                     const result = await response.json();
         
                     if (response.ok) {
-                        // Store the student_id for the session
-	                    sessionStorage.setItem('student_id', result.student_id);
+                        if (response.ok) {
+                            // Store logged-in state and student ID in localStorage
+                            localStorage.setItem('isLoggedIn', true);
+                            localStorage.setItem('student_id', result.student_id);
 
-                        // Redirect to the profile page
-                        window.location.href = 'profile.html';
+                            // Redirect to the profile page
+                            window.location.href = 'profile.html';
+                        }
+
                     } else {
                         document.getElementById('message').innerText = result.error || 'Login failed!';
                     }
