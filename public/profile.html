@@ -37,60 +37,50 @@
 
 		<script>
 			// Get the student ID from session storage
-			const studentId = sessionStorage.getItem('student_id');
+			// Get the student ID from localStorage
+const studentId = localStorage.getItem('student_id');
 
-			if (!studentId) {
-				// Redirect to login page if not logged in
-				window.location.href = 'login.html';
-			} else {
-				// Function to fetch and display the student's profile data
-				async function fetchProfile() {
-					try {
-						// Fetch student data from the API
-						const response = await fetch(`/api/profile?student_id=${studentId}`);
-						const data = await response.json();
+if (!studentId) {
+    // Redirect to login page if not logged in
+    window.location.href = 'login.html';
+} else {
+    // Fetch and display the student's profile data
+    async function fetchProfile() {
+        try {
+            const response = await fetch(`/api/profile?student_id=${studentId}`);
+            const data = await response.json();
 
-						if (response.ok) {
-							// Display the student's name in the navbar
-							document.getElementById('user-info').innerText = `Hello, ${data.student_name}`;
+            if (response.ok) {
+                document.getElementById('user-info').innerText = `Hello, ${data.student_name}`;
+                document.getElementById('student-name').innerText = data.student_name;
+                document.getElementById('student-email').innerText = data.student_email;
 
-							// Display student details
-							document.getElementById('student-name').innerText = data.student_name;
-							document.getElementById('student-email').innerText = data.student_email;
+                const dob = new Date(data.student_dob);
+                const formattedDob = dob.toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric',
+                });
+                document.getElementById('student-dob').innerText = formattedDob;
 
-							// Format the date of birth to "Month Day, Year"
-							const dob = new Date(data.student_dob);
-							const formattedDob = dob.toLocaleDateString('en-US', {
-								month: 'long',
-								day: 'numeric',
-								year: 'numeric',
-							});
-							document.getElementById('student-dob').innerText = formattedDob;
+                document.getElementById('student-grade').innerText = data.student_grade;
+                document.getElementById('student-guardian').innerText = data.student_guardian;
+            } else {
+                document.getElementById('profile-message').innerText =
+                    data.error || 'Failed to load profile data.';
+            }
+        } catch (err) {
+            console.error('Error fetching profile data:', err);
+            document.getElementById('profile-message').innerText = 'Server error!';
+        }
+    }
 
-							document.getElementById('student-grade').innerText = data.student_grade;
-							document.getElementById('student-guardian').innerText = data.student_guardian;
-						} else {
-							// Show error if fetching data fails
-							document.getElementById('profile-message').innerText =
-								data.error || 'Failed to load profile data.';
-						}
-					} catch (err) {
-						// Show error for server issues
-						console.error('Error fetching profile data:', err);
-						document.getElementById('profile-message').innerText = 'Server error!';
-					}
-				}
-
-				// Fetch the student's profile data
-				fetchProfile();
-			}
-
-			// Logout function to clear session and redirect to login
-			document.getElementById('logout').addEventListener('click', () => {
-	            localStorage.clear(); // Clear all stored user data
-	            window.location.href = 'login.html'; // Redirect to the login page
-            });
-
+    fetchProfile();
+}
+document.getElementById('logout').addEventListener('click', () => {
+    localStorage.clear(); // Clear all stored data
+    window.location.href = 'login.html'; // Redirect to the login page
+});
 		</script>
 	</body>
 </html>

@@ -73,36 +73,39 @@ app.post('/api/register', async (req, res) => {
 
 // API Route: User login
 app.post('/api/login', async (req, res) => {
-	const { student_email, student_password } = req.body;
+  const { student_email, student_password } = req.body;
 
-	try {
-		// Check if the user exists
-		const result = await pool.query('SELECT * FROM student WHERE student_email = $1', [student_email]);
+  try {
+      // Check if the user exists
+      const result = await pool.query(
+          'SELECT student_id, student_password FROM student WHERE student_email = $1',
+          [student_email]
+      );
 
-		if (result.rows.length === 0) {
-			return res.status(400).json({ error: 'Invalid email or password' });
-		}
+      if (result.rows.length === 0) {
+          return res.status(400).json({ error: 'Invalid email or password' });
+      }
 
-		const user = result.rows[0];
+      const user = result.rows[0];
 
-		// Compare the password with the hashed password
-		const isMatch = await bcrypt.compare(student_password, user.student_password);
+      // Compare the entered password with the stored hashed password
+      const isMatch = await bcrypt.compare(student_password, user.student_password);
 
-		if (!isMatch) {
-			return res.status(400).json({ error: 'Invalid email or password' });
-		}
+      if (!isMatch) {
+          return res.status(400).json({ error: 'Invalid email or password' });
+      }
 
-		// Return student_id or username in the response
-		res.json({
-			message: 'Login successful',
-			student_id: user.student_id,
-			username: user.student_name, // Use the actual column name
-		});
-	} catch (err) {
-		console.error('Error logging in user:', err.message);
-		res.status(500).json({ error: 'Server error' });
-	}
+      // Return the correct student_id in the response
+      res.json({ student_id: user.student_id });
+  } catch (err) {
+      console.error('Error logging in user:', err.message);
+      res.status(500).json({ error: 'Server error' });
+  }
 });
+
+
+
+
 
 
 app.get('/api/profile', async (req, res) => {

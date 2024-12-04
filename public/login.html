@@ -38,44 +38,41 @@
 		</main>
 
 		<script>
-            // Handle form submission
             document.getElementById('registrationForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-        
-                const formData = {
-                    student_email: document.getElementById('student_email').value,
-                    student_password: document.getElementById('student_password').value,
-                };
-        
-                try {
-                    const response = await fetch('/api/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(formData),
-                    });
-        
-                    const result = await response.json();
-        
-                    if (response.ok) {
-                        if (response.ok) {
-                            // Store logged-in state and student ID in localStorage
-                            localStorage.setItem('isLoggedIn', true);
-                            localStorage.setItem('student_id', result.student_id);
+    e.preventDefault();
 
-                            // Redirect to the profile page
-                            window.location.href = 'profile.html';
-                        }
+    const formData = {
+        student_email: document.getElementById('student_email').value,
+        student_password: document.getElementById('student_password').value,
+    };
 
-                    } else {
-                        document.getElementById('message').innerText = result.error || 'Login failed!';
-                    }
-                } catch (err) {
-                    console.error('Error submitting form:', err);
-                    document.getElementById('message').innerText = 'Server error!';
-                }
-            });
+    try {
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Store the correct student_id in localStorage
+            localStorage.setItem('isLoggedIn', true);
+            localStorage.setItem('student_id', result.student_id);
+
+            // Redirect to the profile page
+            window.location.href = 'profile.html';
+        } else {
+            document.getElementById('message').innerText = result.error || 'Login failed!';
+        }
+    } catch (err) {
+        console.error('Error submitting form:', err);
+        document.getElementById('message').innerText = 'Server error!';
+    }
+});
+
         </script>
 
 	</body>
