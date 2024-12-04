@@ -62,8 +62,6 @@ app.post('/api/register', async (req, res) => {
       [student_id, student_name, student_email, hashedPassword, student_dob, student_grade, student_guardian]
     );
     
-    state.set_student_id(student_id);
-
     res.status(201).json({ message: 'User registered successfully', user: result.rows[0] });
   } catch (err) {
     console.error('Error registering user:', err.message);

@@ -93,6 +93,7 @@ app.get('/data', async (req, res) => {
 
 app.post('/unitydata', async (req, res) => {
     const { data_field } = req.body;
+    state.set_student_id(1);
    // console.log(req.body); // Log the entire body
     const student_id = state.get_student_id();
     const { to_update, value, session_id, game_id } = req.body;
